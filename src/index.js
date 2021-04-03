@@ -1,13 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import configureStore from './store/configureStore';
+import { addExpanse } from './actions/expenses'
+import { setTextFilter } from './actions/filters'
+import getVisibleExpenses from './selectors/expenses'
+
+
+const store = configureStore()
+
+store.dispatch(addExpanse({ description: 'Water Bill' }))
+store.dispatch(addExpanse({ description: 'Gas Bill' }))
+store.dispatch(setTextFilter('water'))
+
+console.log(store.getState())
+
+const state = store.getState()
+
+const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+console.log(visibleExpenses)
+
+const jsx = (
+  <Provider store={store}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Provider>
+)
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  jsx,
   document.getElementById('root')
 );
 
